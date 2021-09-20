@@ -1,0 +1,14 @@
+data_archieve
+examples/results
+data/AA_Scales/*
+data/CellSurfaceAtlas/*
+data/GO_KEGG/*
+data/HumanProteinAtlas/*
+data/NetworkAnalysis/*
+data/Proteomics_References/*
+data/ProteomicsDB/*
+data/Substrates/*
+data/UniProt/*
+
+**/_pycache__
+__pycache__/
