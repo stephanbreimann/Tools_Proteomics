@@ -10,8 +10,9 @@ def get_dict_groups(df=None, lfq_str="log2 LFQ", groups=None):
     dict_col_group = {}
     for col in list(df):
         if lfq_str in col:
+            col_wo_lfq_str = col.replace(lfq_str, "")
             for group in groups:
-                if group in col:
+                if group in col_wo_lfq_str:
                     dict_col_group[col] = group
     return dict_col_group
 
