@@ -43,14 +43,22 @@ def dict_caller():
 
 
 def proteomics_db_caller():
-    """"""
-    genes_target = ["APP", "TSPAN14", "TM2D3", "TM2D2", "TM2D1"]
+    """Call Proteomics DB for following projects:
+    # Marlene (22.09.21, Cell Line):      ["APP", "TM2D3", "NOTCH1", "Presenilin1"]
+    # Xiao (22.09.21, Cell Line, Tissue): ["LRP1", "APP", "NOTCH1"]
+    """
+    conf.plot_settings()
+    # Marlene
+    genes_target = ["LRP1", "SEZ6"]
     pdb = rt.ProteomicsDB()
-    df = pdb.expression_proteins(genes_target=genes_target, genes_filter=genes_target[1],
-                                 min_exp=5, biological_source="Cell_Line")
-    print(set(df.index))
-    pdb.heatmap(df=df)
+    df = pdb.expression_proteins(genes_target=genes_target, genes_filter=genes_target[0:2],
+                                 min_exp=1, biological_source="Tissue")
+    #plt.figure(figsize=(10, 20))
+    ax = pdb.heatmap(df=df)
+    ax.tick_params(axis="y", rotation=0)
+    plt.ylabel("")
     #plt.tick_params(rotation=25, axis="y")
+    plt.tight_layout()
     plt.show()
     file_out = "protein_expression_{}".format("_".join(genes_target))
     #df.to_excel(conf.folder_results + file_out + "xlsx")
@@ -114,10 +122,10 @@ def kathrin_cell_line_tspan14():
 # IV Main
 def main():
     t0 = time.time()
-    covid_co_expression()
+    #covid_co_expression()
     #cell_surface_atlas_caller()
     #dict_caller()
-    #proteomics_db_caller()
+    proteomics_db_caller()
     #kathrin_cell_line_tspan14()
     t1 = time.time()
     print("Time:", t1 - t0)
