@@ -5,19 +5,7 @@ import numpy as np
 
 
 # I Helper Functions
-def get_dict_groups(df=None, lfq_str="log2 LFQ", groups=None):
-    """Get dict with groups from df based on lfq_str and given groups"""
-    dict_col_group = {}
-    for col in list(df):
-        if lfq_str in col:
-            col_wo_lfq_str = col.replace(lfq_str, "")
-            for group in groups:
-                if group in col_wo_lfq_str:
-                    dict_col_group[col] = group
-    return dict_col_group
-
-
-def pre_filter(df=None, list_filter_col=None):
+def _pre_filter(df=None, list_filter_col=None):
     """Remove row if nan for filtering columns"""
     if list_filter_col is None:
         list_filter_col = ["Only identified by site", "Reverse", "Contaminant"]
@@ -28,6 +16,21 @@ def pre_filter(df=None, list_filter_col=None):
 
 
 # II Main Functions
+def get_dict_groups(df=None, lfq_str="log2 LFQ", groups=None, as_list=True):
+    """Get dict with groups from df based on lfq_str and given groups"""
+    dict_col_group = {}
+    for col in list(df):
+        if lfq_str in col:
+            col_wo_lfq_str = col.replace(lfq_str, "")
+            for group in groups:
+                if group in col_wo_lfq_str:
+                    dict_col_group[col] = group
+    if as_list:
+        dict_group_col = {g: [k for k, v in dict_col_group.items() if v == g] for g in groups}
+        return dict_group_col
+    return dict_col_group
+
+
 class PerseusBase:
     """Base class for Perseus Pipeline"""
 
@@ -45,7 +48,7 @@ class PerseusBase:
         list_col = [col_acc, col_genes] + self.list_col_lfq
         # Pre filter df
         if pre_filtered:
-            df = pre_filter(df=df)
+            df = _pre_filter(df=df)
         df_modified = df[list_col].copy()
         df_modified.rename({col_acc: "ACC", col_genes: "Gene_Name"}, axis=1, inplace=True)
         self._df = df_modified
